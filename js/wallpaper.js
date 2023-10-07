@@ -432,7 +432,7 @@ function hoverJigsawSearch(obj) {
 // 同步改变浏览器标题
 function changeTitle(obj) {
 	if ($(obj).html() == '') {
-		$('title').html('小笨电脑壁纸-小笨在线壁纸-在线搜索');
+		$('title').html('雅图轩 - 在线搜索');
 	} else {
 		$('title').html($(obj).html() + ' - 在线壁纸');
 	}
@@ -508,4 +508,4 @@ function getParenthesesStr(text) {
 
 console.info(
 	'雅图轩来源于：360壁纸库、必应首页壁纸以及金山词霸开放平台。\n仅供交流学习，请勿商业使用。\n如果您认为，我们侵犯了您的某些权力，请通过以下方式与我们取得联系，我们将积极处理。\nQQ：2585649532\n邮箱：web@email.heheda.top'
-	);
+);
