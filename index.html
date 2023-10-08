@@ -7,9 +7,20 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 		<meta name="robots" content="index,follow" />
-		<link rel="icon" href="./favicon.ico">
 		<link rel="stylesheet" href="./css/wallpaper.css">
 		<link rel="stylesheet" href="./css/bootstrap.min.css">
+		<!--网站图标配置-->
+		<link rel="icon" href="./favicon.ico">
+		<link rel="apple-touch-icon" sizes="192x192" href="./icons/192.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="./icons/16.png">
+		<link rel="icon" type="image/png" sizes="72x72" href="./icons/72.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="./icons/96.png">
+		<link rel="icon" type="image/png" sizes="128x128" href="./icons/128.png">
+		<link rel="icon" type="image/png" sizes="144x144" href="./icons/144.png">
+		<link rel="icon" type="image/png" sizes="152x152" href="./icons/152.png">
+		<link rel="icon" type="image/png" sizes="512x512" href="./icons/512.png">
+		<!--PWA配置-->
+		<link rel="manifest" type="text/css" href="./manifest.json">
 	</head>
 	<body>
 
@@ -76,4 +87,10 @@
 		<!--页面核心js文件-->
 		<script type="text/javascript" src="./js/wallpaper.js"></script>
 		<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+		<!--PWA渐进式应用配置-->
+		<script async="async" type="module">
+			import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
+			const el = document.createElement('pwa-update');
+			document.body.appendChild(el);
+		</script>
 	</body>
