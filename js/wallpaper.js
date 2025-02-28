@@ -1,5 +1,5 @@
 var seting = {
-	apiUrl: "https://php-api.heheda.top/picture", // api地址
+	apiUrl: "https://server.heheda.top/picture/", // api地址
 	ratio: 0.618, // 图片宽高比
 	types: '360new', // 加载壁纸的种类
 	downApi: 'https://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=' // 用于下载图片的api地址
@@ -24,17 +24,12 @@ window.onload = function() {
 	loadData(seting.types, false);
 	resizeHeight();
 };
-
 $(function() {
-
 	// 监听滚动消息
 	$(window).scroll(function() {
-
-		let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body
+		let scrollTop = window.scrollY || document.documentElement.scrollTop || document.body
 			.scrollTop;
-
 		if (scrollTop + $(window).height() + 57 >= $(document).height() && scrollTop > 20) {
-
 			if (seting.types === '360search') {
 				loadDataSearch(seting.types, false, jigsaw.value);
 				loadDataSearch(seting.types, false, jigsaw.value);
@@ -53,7 +48,6 @@ $(function() {
 			}
 		}
 	});
-
 	$("#toolBall").click(function() {
 		if (seting.types == 'bing' || seting.types == 'ciba') {
 			return true;
@@ -63,22 +57,18 @@ $(function() {
 		});
 		return false;
 	});
-
 	// 点击关闭弹出层
 	$("body").on("click", "#full-img", function() {
 		$("#full-img").remove();
 	});
-
 	// 点击小图显示大图
 	$("#walBox").on("click", "img", function() {
 		showImg($(this).data('realurl'));
 	});
 });
-
 // 加载壁纸容器中的壁纸
 function loadData(types, newload) {
 	if (types != seting.types || newload === true) {
-
 		seting.types = types;
 		jigsaw = {
 			count: 0, // 已加载的总数
@@ -98,7 +88,6 @@ function loadData(types, newload) {
 		$("#toolBall").attr('title', '返回顶部');
 		$("#toolBall").hide();
 	}
-
 	switch (seting.types) {
 		case 'bing': //加载必应壁纸
 			ajaxBingWal(-1, 8);
@@ -107,7 +96,6 @@ function loadData(types, newload) {
 			$("#toolBall").attr('class', 'downBing');
 			$("#toolBall").attr('title', '下载这张图片');
 			break;
-
 		case 'ciba': // 加载金山词霸每日一句壁纸
 			if (newload === false) return;
 			ajaxCiba(1);
@@ -115,12 +103,10 @@ function loadData(types, newload) {
 			$("#toolBall").attr('class', 'downBing');
 			$("#toolBall").attr('title', '下载这张图片');
 			break;
-
 		default: // 加载来自360的壁纸
 			ajax360Wal(seting.types, jigsaw.pageno, 10);
 	}
 }
-
 // 加载壁纸容器中的壁纸
 function loadDataSearch(types, newload, content) {
 	if (types != seting.types || newload === true) {
@@ -150,9 +136,7 @@ function loadDataSearch(types, newload, content) {
 			break;
 	}
 }
-
 resizeHeight();
-
 // 重新调整高度
 function resizeHeight() {
 	switch (seting.types) {
@@ -163,7 +147,6 @@ function resizeHeight() {
 	}
 	return true;
 }
-
 // 显示一张拼图壁纸
 function addJigsaw(img, alt) {
 	var newHtml; // 新增的内容
@@ -173,35 +156,28 @@ function addJigsaw(img, alt) {
 	{
 		newHtml = '    <div class="Hhalf oneImg" onmouseover="hoverJigsawSearch(this)">' +
 			'        <img data-original="' + img + '" alt="' + alt + '" title="关键字：' + alt + '" data-realurl="' + img +
-			'">' +
-			'    </div>' +
-			'</div>';
+			'">' + '</div>' + '</div>';
 		contAdd(jigsaw.halfHtml + newHtml); //往容器中加入内容
 		jigsaw.halfHtml = ''; // 另外半边加载完成
 		return true; // 函数功能已完成
 	}
-
 	if (((jigsaw.count - 1) % 5) === 0) {
 		jigsaw.loadBig = false;
 	} // 新的一行，状态重置
-
 	if ((jigsaw.loadBig === false) && ((Math.floor(Math.random() * 3) === 0) || ((jigsaw.count % 5) === 0))) // 随机加载大张壁纸
 	{
 		newHtml = '<div class="item half oneImg" onmouseover="hoverJigsawSearch(this)">' +
 			'    <img data-original="' + img + '" alt="' + alt + '" title="关键字：' + alt + '" data-realurl="' + img +
-			'">' +
-			'</div>';
+			'">' + '</div>';
 		contAdd(newHtml); //往容器中加入内容
 		jigsaw.loadBig = true; // 大张壁纸已被加载
 		return true; // 函数功能已完成
 	}
-
 	// 加载半张的壁纸
 	jigsaw.halfHtml = '<div class="item quater">' +
 		'    <div class="Hhalf oneImg" onmouseover="hoverJigsawSearch(this)">' +
 		'        <img data-original="' + img + '" alt="' + alt + '" title="关键字：' + alt + '" data-realurl="' + img +
-		'">' +
-		'    </div>';
+		'">' + '</div>';
 	return true;
 }
 
@@ -218,31 +194,31 @@ function contAdd(html) {
 // ajax加载必应壁纸
 function ajaxBingWal(start, count) {
 	$.ajax({
-		type: "GET",
+		type: "POST",
 		url: seting.apiUrl,
 		data: "cid=bing&start=" + start + "&count=" + count,
 		dataType: "json",
 		success: function(jsonData) {
+			jsonData = jsonData.data;
 			let newHtml = "";
 			if (isPC()) {
 				newHtml += '<link rel="stylesheet" href="css/onepage-scroll.css">', downUrl = '';
 				$("#walBox").append(newHtml); // 全屏滚动插件css
 			}
-			for (var i = 0; i < jsonData.images.length; i++) {
-				downUrl = seting.downApi + 'https://cn.bing.com' + jsonData.images[i].url;
+			for (var i = 0; i < jsonData.length; i++) {
+				downUrl = seting.downApi + 'https://cn.bing.com' + jsonData[i].url;
 				if (isPC()) {
 					newHtml += '<section data-url="' + downUrl + '" data-img="https://cn.bing.com' +
-						jsonData.images[i].url + '"><p class="note">' + jsonData.images[i].copyright +
+						jsonData[i].url + '"><p class="note">' + jsonData[i].copyright +
 						'</p></section>';
 				} else {
-					let copyright = getParenthesesStr(jsonData.images[i].copyright);
-					let title = jsonData.images[i].copyright.replace(copyright, "");
+					let copyright = getParenthesesStr(jsonData[i].copyright);
+					let title = jsonData[i].copyright.replace(copyright, "");
 					copyright = copyright.substring(1, copyright.length - 1);
 					newHtml +=
-						`<div class="xben-by-img"><img data-realurl="https://cn.bing.com${jsonData.images[i].url}" src="https://cn.bing.com${jsonData.images[i].url}" /> <p class="title">${title}<a href="${downUrl}" class="xben-bing-download">&nbsp|&nbsp立即下载</a></p><p class="copyright">${copyright}</p></div>`;
+						`<div class="xben-by-img"><img data-realurl="https://cn.bing.com${jsonData[i].url}" src="https://cn.bing.com${jsonData[i].url}" /> <p class="title">${title}<a href="${downUrl}" class="xben-bing-download">&nbsp|&nbsp立即下载</a></p><p class="copyright">${copyright}</p></div>`;
 					$("#toolBall").css("display", "none");
 				}
-
 			}
 			$("#walBox").append(newHtml);
 			if (isPC()) {
@@ -275,12 +251,14 @@ function ajaxBingWal(start, count) {
 	return true;
 }
 // ajax加载金山词霸每日图片
-function ajaxCiba(data) {
+function ajaxCiba() {
 	$.ajax({
-		type: "GET",
-		url: "https://open.iciba.com/dsapi/",
-		dataType: "jsonp",
+		type: "POST",
+		url: seting.apiUrl,
+		data: "cid=iciba",
+		dataType: "json",
 		success: function(jsonData) {
+			jsonData = jsonData.data;
 			var newHtml =
 				`<div class="xben-day-img" ><img data-realurl="${jsonData.picture2}" src="${jsonData.picture2}"  /><p class="note xben-note" title="${jsonData.translation}"><span onclick="$('audio')[0].play();" title="点击朗读" class="ciba-eng">${jsonData.content}</span><span>${jsonData.note}    <span title="${jsonData.love}人喜欢" class="ciba-love" onclick="$('.love-count').html(parseInt($('.love-count').html()) + 1)"><span class="xben-love">♥</span>&nbsp;<span class="love-count">${jsonData.love}</span></span></span></p><audio src="${jsonData.tts}" hidden></audio></div>`;
 			$("#walBox").append(newHtml);
@@ -289,11 +267,10 @@ function ajaxCiba(data) {
 	});
 	return true;
 }
-
 // ajax加载360壁纸标签
 function ajax360Tags() {
 	$.ajax({
-		type: "GET",
+		type: "POST",
 		url: seting.apiUrl,
 		data: "cid=360tags",
 		dataType: "json",
@@ -310,7 +287,6 @@ function ajax360Tags() {
 	});
 	return true;
 }
-
 //ajax搜索360壁纸
 function ajax360WalSearch(cid, start, count, content) {
 	if (jigsaw.ajaxing === true) return false;
@@ -319,7 +295,7 @@ function ajax360WalSearch(cid, start, count, content) {
 	jigsaw.ajaxing = true;
 	jigsaw.pageno++;
 	$.ajax({
-		type: "GET",
+		type: "POST",
 		url: seting.apiUrl,
 		data: "cid=" + cid + "&start=" + start + "&count=" + count + "&content=" + encodeURIComponent(content),
 		dataType: "json",
@@ -338,61 +314,47 @@ function ajax360WalSearch(cid, start, count, content) {
 	});
 	return true;
 }
-
 // 显示一张拼图壁纸（360搜索）
 function addJigsawSearch(img, alt) {
 	var newHtml; // 新增的内容
 	jigsaw.count++; // 已加载壁纸数自加
-
 	if (jigsaw.halfHtml !== '') //  1/4 的壁纸，已加载完上面一半，接着加载下面那半
 	{
-
 		newHtml = '    <div class="Hhalf oneImg" onmouseover="hoverJigsawSearch(this)">' +
 			'        <img data-original="' + img + '" alt="' + alt + '" title="关键字：' + alt + '" data-realurl="' + img +
-			'">' +
-			'    </div>' +
-			'</div>';
+			'">' + '</div>' + '</div>';
 		contAdd(jigsaw.halfHtml + newHtml); //往容器中加入内容
 		jigsaw.halfHtml = ''; // 另外半边加载完成
 		return true; // 函数功能已完成
 	}
-
 	if (((jigsaw.count - 1) % 5) === 0) {
 		jigsaw.loadBig = false;
 	} // 新的一行，状态重置
-
 	if ((jigsaw.loadBig === false) && ((Math.floor(Math.random() * 3) === 0) || ((jigsaw.count % 5) === 0))) // 随机加载大张壁纸
 	{
-
-
 		newHtml = '<div class="item half oneImg" onmouseover="hoverJigsawSearch(this)">' +
 			'    <img data-original="' + img + '" alt="' + alt + '" title="关键字：' + alt + '" data-realurl="' + img +
-			'">' +
-			'</div>';
+			'">' + '</div>';
 		contAdd(newHtml); //往容器中加入内容
 		jigsaw.loadBig = true; // 大张壁纸已被加载
 		return true; // 函数功能已完成
 	}
-
 	// 加载半张的壁纸
 	jigsaw.halfHtml = '<div class="item quater">' +
 		'    <div class="Hhalf oneImg" onmouseover="hoverJigsawSearch(this)">' +
 		'        <img data-original="' + img + '" alt="' + alt + '" title="关键字：' + alt + '" data-realurl="' + img +
-		'">' +
-		'    </div>';
+		'">' + '</div>';
 	return true;
 }
-
 // ajax加载来自360的壁纸
 function ajax360Wal(cid, start, count) {
 	if (jigsaw.ajaxing === true) return false;
-
 	$("#loadmore").html('努力加载中……');
 	$("#loadmore").show();
 	jigsaw.ajaxing = true;
 	jigsaw.pageno++;
 	$.ajax({
-		type: "GET",
+		type: "POST",
 		url: seting.apiUrl,
 		data: "cid=" + cid + "&start=" + start + "&count=" + count,
 		dataType: "json",
@@ -411,9 +373,6 @@ function ajax360Wal(cid, start, count) {
 	});
 	return true;
 }
-
-
-
 // 解码360图片的链接，获得指定尺寸图片
 function decode360Url(oldUrl, width, height, quality) {
 	return oldUrl.replace("r\/__85", "m\/" + parseInt(width) + "_" + parseInt(height) + "_" + quality);
@@ -421,14 +380,12 @@ function decode360Url(oldUrl, width, height, quality) {
 
 function hoverJigsawSearch(obj) {
 	if ($(obj).find('.down').length > 0) return true;
-
 	var realUrl = $(obj).find('img').attr("data-realurl");
 	var downBox = '';
 	downBox = '<ul class="down" title="下载壁纸">' +
 		'<li><a href="' + seting.downApi + realUrl + '" target="_blank" title="下载原始尺寸图片">原始尺寸</a></li></ul>'
 	$(obj).append(downBox);
 }
-
 // 同步改变浏览器标题
 function changeTitle(obj) {
 	if ($(obj).html() == '') {
@@ -437,7 +394,6 @@ function changeTitle(obj) {
 		$('title').html($(obj).html() + ' - 在线壁纸');
 	}
 }
-
 var imgDom;
 // 全屏展示图片
 // 参数：图片链接
@@ -452,14 +408,12 @@ function showImg(img) {
 		$(".xben-full-img>img").removeClass("horizontal");
 		$(".horizontal-btn").show();
 	}
-
 }
 //横屏显示
 $(".horizontal-btn").click(function() {
 	$(".xben-full-img>img").addClass("horizontal");
 	$(this).hide();
 })
-
 $(".xben-full-img").click(function() {
 	$(this).hide();
 });
@@ -468,12 +422,19 @@ $(".xben-full-img .horizontal-btn").click((e) => {
 })
 
 function loadData360Search() {
-	var text = document.getElementById("360text").value;
+	var text = document.getElementById('360text').value;
 	if (text === "") {
 		text = '中国';
 	}
 	loadDataSearch('360search', true, text);
 }
+// 回车搜索
+document.addEventListener('keydown', (e) => {
+	const tvb = document.getElementById('360text');
+	if (e.key == 'Enter' && tvb == document.activeElement) {
+		loadData360Search();
+	}
+})
 
 function isPC() {
 	var userAgentInfo = navigator.userAgent;
@@ -505,7 +466,6 @@ function getParenthesesStr(text) {
 	}
 	return result
 }
-
 console.info(
 	'雅图轩来源于：360壁纸库、必应首页壁纸以及金山词霸开放平台。\n仅供交流学习，请勿商业使用。\n如果您认为，我们侵犯了您的某些权力，请通过以下方式与我们取得联系，我们将积极处理。\nQQ：2585649532\n邮箱：web@email.heheda.top'
 );
